@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RetroStoreWeb.Models;
+using RetroStore.Models.ViewModels;
 using System.Diagnostics;
 
-namespace RetroStoreWeb.Controllers {
+namespace RetroStoreWeb.Areas.Customer.Controllers {
+
+    [Area("Customer")]
     public class HomeController : Controller {
         private readonly ILogger<HomeController> _logger;
 

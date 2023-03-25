@@ -1,0 +1,16 @@
+﻿@model Genre
+@{
+    ViewData["Title"] = "Delete Genre";
+}
+
+<h1>Delete Genre</h1>
+
+<form class="w-50" method="post" asp-action="DeletePOST">
+    <input asp-for="Id" type="text" hidden/>
+
+    <label asp-for="Name"></label>
+    <input class="form-control" asp-for="Name" type="text" disabled />
+
+    <button class="btn btn-danger my-2" type="submit">Delete Genre</button>
+    <a class="btn btn-secondary" asp-controller="Genres" asp-action="Index" style="width: 150px;">Back to list</a>
+</form>
