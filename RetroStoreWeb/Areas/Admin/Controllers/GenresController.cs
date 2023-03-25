@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RetroStore.DataAccess;
 using RetroStore.Models.Models;
+using RetroStore.Models.ViewModels;
 
 namespace RetroStoreWeb.Areas.Admin.Controllers {
 
@@ -66,12 +68,12 @@ namespace RetroStoreWeb.Areas.Admin.Controllers {
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Genre genre) {
-            var duplicateGenre = _context.Genres.FirstOrDefault(g => g.Name == genre.Name);
+            var duplicateGenre = _context.Genres.FirstOrDefault(g => g.Name == genre.Name && g.Id != genre.Id);
 
             if (duplicateGenre != null) {
                 ModelState.AddModelError("Duplicate Genre", "A genre with this name already exists");
 
-                return View();
+                return View(genre);
             }
 
             var genreToUpdate = await _context.Genres.FirstOrDefaultAsync(g => g.Id == genre.Id);

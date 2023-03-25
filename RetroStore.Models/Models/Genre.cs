@@ -12,5 +12,15 @@ namespace RetroStore.Models.Models {
         [Required]
         [MaxLength(50)]
         public string Name { get; set; } = null!;
+
+        public override bool Equals(object? obj) {
+            return obj is Genre genre &&
+                   Id == genre.Id &&
+                   Name == genre.Name;
+        }
+
+        public override int GetHashCode() {
+            return HashCode.Combine(Id, Name);
+        }
     }
 }

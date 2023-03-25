@@ -1,0 +1,44 @@
+﻿@using RetroStore.Models.Models;
+@model IEnumerable<Product>
+
+@{
+    ViewData["Title"] = "Products";
+}
+
+<div class="container p-2">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Products List</h2>
+        </div>
+        <div class="col-6 px-1 d-flex align-items-center justify-content-end">
+            <a class="btn btn-success" style="height: 2.5rem;" asp-controller="Products" asp-action="Create"><i class="bi bi-file-earmark-plus"></i> &nbsp;Add New Genre</a>
+        </div>
+    </div>
+</div>
+
+<table id="tblData" class="table table-borderless table-striped dt-responsive" style="width: 100%; vertical-align: middle">
+    <thead>
+        <tr>
+            <th>
+                Title
+            </th>
+            <th>
+                @Html.DisplayNameFor(x => x.ElementAt(0).Genre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(x => x.ElementAt(0).ReleaseDate)
+            </th>
+            <th>
+                Platform
+            </th>
+            <th>
+                Price ($)
+            </th>
+            <th width="15%"></th>
+        </tr>
+    </thead>
+</table>
+
+@section Scripts {
+    <script src="~/js/product.js"></script>
+}

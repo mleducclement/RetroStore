@@ -1,0 +1,101 @@
+﻿@model RetroStore.Models.ViewModels.ProductView
+
+@{
+    ViewData["Title"] = "Edit Product";
+}
+
+<form id="createForm" method="post" asp-action="Edit" enctype="multipart/form-data">
+    <input asp-for="Product.Id" type="text" hidden />
+    <input asp-for="Product.ImageUrl" type="text" hidden />
+
+    <div class="row">
+        <div class="col-10">
+            <div class="border p-3 mt-4 row">
+                <div class="col-12 pb-2">
+                    <h2 class="text-primary">Edit Product</h2>
+                    <hr />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Product.Name"></label>
+                    <input class="form-control" asp-for="Product.Name" />
+                    <span class="text-danger d-block mb-3" asp-validation-for="Product.Name"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Product.Description"></label>
+                    <textarea class="form-control" asp-for="Product.Description" rows="3" cols="50"></textarea>
+                    <span class="text-danger d-block mb-3" asp-validation-for="Product.Description"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Product.ReleaseDate"></label>
+                    <input class="form-control" asp-for="Product.ReleaseDate" type="date" min="1980-01-01" max="2025-01-01" />
+                    <span class="text-danger d-block mb-3" asp-validation-for="Product.ReleaseDate"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Product.GenreId"></label>
+                    <select class="form-select" asp-for="Product.GenreId" asp-items="@Model.GenreListItems">
+                        <option disabled selected></option>
+                    </select>
+                    <span class="text-danger d-block mb-3" asp-validation-for="Product.GenreId"></span>
+                </div>
+
+                <div class="mb-3 col-6">
+                    <label asp-for="Product.Developer"></label>
+                    <input class="form-control" asp-for="Product.Developer" type="text" />
+                    <span class="text-danger d-block mb-3" asp-validation-for="Product.Developer"></span>
+                </div>
+
+                <div class="mb-3 col-6">
+                    <label asp-for="Product.Publisher"></label>
+                    <input class="form-control" asp-for="Product.Publisher" type="text" />
+                    <span class="text-danger d-block mb-3" asp-validation-for="Product.Publisher"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Product.Platform"></label>
+                    <select class="form-select" asp-for="Product.Platform">
+                        @foreach (Platform platform in Enum.GetValues(typeof(Platform))) {
+                            <option value="@platform">@platform.GetDescription()</option>
+                        }
+                    </select>
+                    <span class="text-danger d-block mb-3" asp-validation-for="Product.Platform"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Product.ImageUrl"></label>
+                    <input class="form-control" id="product-image-upload-field" name="file" type="file" />
+                </div>
+
+                <div class="mb-3 col-6">
+                    <label asp-for="Product.ListPrice"></label>
+                    <input class="form-control" asp-for="Product.ListPrice" />
+                    <span class="text-danger d-block mb-3" asp-validation-for="Product.ListPrice"></span>
+                </div>
+
+                <div class="mb-3 col-6">
+                    <label asp-for="Product.Price"></label>
+                    <input class="form-control" asp-for="Product.Price" />
+                    <span class="text-danger d-block mb-3" asp-validation-for="Product.Price"></span>
+                </div>
+
+                <div class="col-12">
+                    <button class="btn btn-primary my-2 col-12" onclick="ValidateInput()">Edit</button>
+                    <a class="btn btn-secondary col-12" asp-controller="Products" asp-action="Index">Back to list</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-2 pt-4">
+            <img src="@Model.Product.ImageUrl" style="width:100%; border-radius:5px; border:1px solid #bbb9b9" />
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+}
