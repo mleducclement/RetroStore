@@ -3,8 +3,14 @@ using RetroStore.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// AddToCart services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options => {
+    options.IdleTimeout = TimeSpan.FromMinutes(5);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 builder.Services.AddDbContext<ApplicationDbContext>(options => options
     .UseSqlServer(builder.Configuration.GetConnectionString("Default"))
     .UseLoggerFactory(LoggerFactory.Create(builder => builder.AddSimpleConsole()))
@@ -30,9 +36,13 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+app.UseSession();
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllerRoute("removeItemFromCart", "{area}/{controller}/{action}/{productId}", new { area = "Customer", controller = "ShoppingCart", action = "Remove" });
 
 app.MapRazorPages();
 app.Run();

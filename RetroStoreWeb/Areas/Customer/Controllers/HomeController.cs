@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RetroStore.DataAccess;
 using RetroStore.Models.Models;
 using RetroStore.Models.ViewModels;
+using RetroStore.Utility.ExtensionMethods;
 using System.Diagnostics;
+using System.Text.Json;
 
 namespace RetroStoreWeb.Areas.Customer.Controllers {
 
@@ -34,13 +37,46 @@ namespace RetroStoreWeb.Areas.Customer.Controllers {
                 return View("Error");
             }
 
-            ShoppingCartView cart = new ShoppingCartView()
+            CartItemView cart = new CartItemView()
             {
                 Count = 1,
                 Product = product
             };
 
             return View(cart);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddToCart(string jsonProduct, int count) {
+
+            var product = JsonSerializer.Deserialize<Product>(jsonProduct);
+
+            if (product == null) {
+                return NotFound();
+            }
+
+            CartItemView cartItem = new CartItemView
+            {
+                Product = product,
+                Count = count
+            };
+
+            // Check if there's a cart in the session. Create it if it doesn't exist
+            if (HttpContext.Session.Get<List<CartItemView>>("cart") == null) {
+                HttpContext.Session.Set("cart", new List<CartItemView>());
+            }
+
+            // Retrieve the cart from the session.
+            List<CartItemView> cart = HttpContext.Session.Get<List<CartItemView>>("cart");
+
+            // AddToCart the product to the cart.
+            cart.Add(cartItem);
+
+            HttpContext.Session.Set("cart", cart);
+
+            // Redirect to the shopping cart page.
+            return RedirectToAction("Index", "ShoppingCart");
         }
 
         public IActionResult Privacy() {

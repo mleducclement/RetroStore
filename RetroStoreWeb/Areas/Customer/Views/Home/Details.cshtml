@@ -1,10 +1,11 @@
 ﻿@using RetroStore.Models.ViewModels;
-@model ShoppingCartView
+@using System.Text.Json;
+@model CartItemView
 @{
     ViewData["Title"] = Model.Product.Name;
 }
 
-<form method="post">
+<form method="post" asp-action="AddToCart">
     <div class="card container my-4">
         <div class="card-header bg-primary text-light ml-0  row ">
             <div class="col-12 col-md-6">
@@ -27,7 +28,7 @@
                             <h5 class="text-danger">List Price: <span style="text-decoration: line-through;">$@Model.Product.ListPrice</span></h5>
                         </div>
                         <div class="row pl-2">
-                            <h5>Price: <span style="font-weight: bold">$@Model.Product.ListPrice</span></h5>
+                            <h5>Price: <span style="font-weight: bold">$@Model.Product.Price</span></h5>
                         </div>
                         <div class="row pl-2">
                             <p class="text-primary">@Model.Product.Description</p>
@@ -49,7 +50,9 @@
                     <a class="btn btn-success form-control d-flex align-items-center justify-content-center" style="height:50px;" asp-controller="Home" asp-action="Index">Back to List</a>
                 </div>
                 <div class="col-12 col-md-6 pb-1">
-                    <button type="submit" value="Add to Cart" class="btn btn-primary form-control" style="height:50px;">Add to Cart</button>
+                    <input type="hidden" name="jsonProduct" value="@JsonSerializer.Serialize(@Model.Product)" />
+                    <input type="hidden" name="count" value="@Model.Count" />
+                    <button type="submit" class="btn btn-primary form-control" style="height:50px;">Add to Cart</button>
                 </div>
             </div>
         </div>
