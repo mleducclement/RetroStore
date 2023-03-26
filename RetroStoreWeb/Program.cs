@@ -42,7 +42,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");
 
-app.MapControllerRoute("removeItemFromCart", "{area}/{controller}/{action}/{productId}", new { area = "Customer", controller = "ShoppingCart", action = "Remove" });
-
 app.MapRazorPages();
 app.Run();

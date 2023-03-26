@@ -28,9 +28,8 @@ else {
                     <td>@item.Count</td>
                     <td>
                         <form method="post" asp-action="Remove" asp-route-productId="@item.Product.Id">
-                            <button type="submit">Remove</button>
+                            <button type="submit"><i class="bi bi-trash3"></i></button>
                         </form>
-                        
                     </td>
                 </tr>
             }
