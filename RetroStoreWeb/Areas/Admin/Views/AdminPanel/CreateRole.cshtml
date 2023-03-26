@@ -4,10 +4,13 @@
 
 <h2>Create Role</h2>
 
-<form method="post" asp-action="CreateRole">
-    <div class="form-group">
+<form style="width: 50%" method="post" asp-action="CreateRole">
+
+    <div class="form-group mb-3">
         <label class="form-label" for="roleName">Role Name</label>
         <input class="form-control" type="text" id="roleName" name="roleName" required />
     </div>
-    <button class="btn btn-primary" type="submit">Create Role</button>
+
+    <button class="btn btn-primary" type="submit">Add New Role</button>
+    <a class="btn btn-secondary" asp-controller="AdminPanel" asp-action="Index" style="width: 150px;">Back</a>
 </form>

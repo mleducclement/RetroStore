@@ -1,0 +1,37 @@
+﻿@using RetroStore.Models.ViewModels;
+@model IEnumerable<UserRoleView>
+@{
+    ViewData["Title"] = "List Users";
+}
+
+<h2>List Users</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>User ID</th>
+            <th>Roles</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var userRoleView in Model) {
+            <tr>
+                <td>@userRoleView.User.Email</td>
+                <td>@userRoleView.User.Id</td>
+                <td>
+                    @if (userRoleView.Roles.Any()) {
+                        @string.Join(", ", userRoleView.Roles)
+                    }
+                    else {
+                        <span>No Roles Assigned</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="EditUserRoles" asp-route-userId="@userRoleView.User.Id">Edit Role</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,25 @@
+﻿@using RetroStore.Models.ViewModels
+@model UserRoleView
+
+@{
+    ViewData["Title"] = "Edit Role";
+}
+
+<h2>Edit Roles for @Model.User.Email</h2>
+
+<form asp-controller="AdminPanel" asp-action="EditUserRoles" method="post">
+    <input type="hidden" name="userId" value="@Model.User.Id" />
+    
+    <div class="form-group">
+        <label for="roles">Roles</label>
+        <select id="roles" name="selectedRoles" class="form-control" multiple>
+            @foreach (var role in Model.AllRoles)
+            {
+                <option value="@role.Name" select="@(Model.Roles.Contains(role.Name) ? "selected" : "")")>@role.Name</option>
+            }
+        </select>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Update Roles</button>
+    <a asp-controller="AdminPanel" asp-action="ListUsers" class="btn btn-secondary">Cancel</a>
+</form>
