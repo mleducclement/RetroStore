@@ -25,17 +25,21 @@
                         <li class="nav-item">
                             <a class="nav-link active" asp-area="Customer" asp-controller="Home" asp-action="Index">Home<span class="visually-hidden">(current)</span></a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Admin" asp-controller="AdminPanel" asp-action="ListRoles">Home<span class="visually-hidden">(current)</span></a>
+                        </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Admin</a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" asp-area="Admin" asp-controller="Genres" asp-action="Index">Genres</a>
-                                <a class="dropdown-item" asp-area="Admin" asp-controller="Products" asp-action="Index">Products</a>
+                                <a class="dropdown-item" asp-area="Manager" asp-controller="Genres" asp-action="Index">Genres</a>
+                                <a class="dropdown-item" asp-area="Manager" asp-controller="Products" asp-action="Index">Products</a>
                             </div>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-area="Customer" asp-controller="ShoppingCart" asp-action="Index">Cart</a>
-                        </li>
+                        </li>                  
                     </ul>
+                    <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>

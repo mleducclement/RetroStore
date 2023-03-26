@@ -8,7 +8,7 @@ function loadDataTable() {
     dataTable = new DataTable("#tblData", {
         responsive: true,
         ajax: {
-            "url": "/Admin/Genres/GetAll",
+            "url": "/Manager/Genres/GetAll",
         },
         "columns": [
             { "data": "name" },
@@ -17,8 +17,8 @@ function loadDataTable() {
                 "render": function (data) {
                     return `
                         <div class="w-100 btn-group" role="group">
-                        <a class="btn btn-info" href="/Admin/Genres/Edit/${data}"><i class="bi bi-pencil-square"></i></a>
-                        <a class="btn btn-danger" onClick=Delete('/Admin/Genres/Delete/'+${data})><i class="bi bi-trash3"></i></a>
+                        <a class="btn btn-info" href="/Manager/Genres/Edit/${data}"><i class="bi bi-pencil-square"></i></a>
+                        <a class="btn btn-danger" onClick=Delete('/Manager/Genres/Delete/'+${data})><i class="bi bi-trash3"></i></a>
                         </div>
                     `
                 },

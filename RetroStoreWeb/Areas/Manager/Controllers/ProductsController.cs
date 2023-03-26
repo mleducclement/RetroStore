@@ -6,9 +6,9 @@ using RetroStore.Models.Models;
 using RetroStore.Models.ViewModels;
 using RetroStore.Utility.ExtensionMethods;
 
-namespace RetroStoreWeb.Areas.Admin.Controllers {
+namespace RetroStoreWeb.Areas.Manager.Controllers {
 
-    [Area("Admin")]
+    [Area("Manager")]
     public class ProductsController : Controller {
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
@@ -24,6 +24,7 @@ namespace RetroStoreWeb.Areas.Admin.Controllers {
             return View(products);
         }
 
+        //TODO : Fix bug where we can add product without image because of JS validation
         // GET
         public async Task<IActionResult> Create() {
             IEnumerable<Genre> genres = await _context.Genres.ToListAsync();

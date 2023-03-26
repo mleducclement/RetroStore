@@ -5,9 +5,9 @@ using RetroStore.DataAccess;
 using RetroStore.Models.Models;
 using RetroStore.Models.ViewModels;
 
-namespace RetroStoreWeb.Areas.Admin.Controllers {
+namespace RetroStoreWeb.Areas.Manager.Controllers {
 
-    [Area("Admin")]
+    [Area("Manager")]
     public class GenresController : Controller {
         private readonly ApplicationDbContext _context;
 
@@ -41,6 +41,7 @@ namespace RetroStoreWeb.Areas.Admin.Controllers {
             if (ModelState.IsValid) {
                 _context.Add(genre);
                 await _context.SaveChangesAsync();
+                //TODO : Add check to make sure the genre has been modified
                 TempData["success"] = "The genre was added successfully";
                 return RedirectToAction("Index");
             }
@@ -111,7 +112,7 @@ namespace RetroStoreWeb.Areas.Admin.Controllers {
 
             _context.Remove(genreToDelete);
             await _context.SaveChangesAsync();
-            return Json(new { success = true, message = "Product deleted successfully" });
+            return Json(new { success = true, message = "Genre deleted successfully" });
         }
 
         #endregion
