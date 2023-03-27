@@ -1,13 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RetroStore.DataAccess;
 using RetroStore.Models.Models;
 using RetroStore.Models.ViewModels;
+using System.Data;
 
 namespace RetroStoreWeb.Areas.Manager.Controllers {
 
     [Area("Manager")]
+    [Authorize(Roles = "Administrator, Manager")]
     public class GenresController : Controller {
         private readonly ApplicationDbContext _context;
 

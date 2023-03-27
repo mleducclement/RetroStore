@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RetroStore.DataAccess;
@@ -9,6 +10,7 @@ using RetroStore.Utility.ExtensionMethods;
 namespace RetroStoreWeb.Areas.Manager.Controllers {
 
     [Area("Manager")]
+    [Authorize(Roles = "Administrator, Manager")]
     public class ProductsController : Controller {
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
@@ -29,7 +31,7 @@ namespace RetroStoreWeb.Areas.Manager.Controllers {
         public async Task<IActionResult> Create() {
             IEnumerable<Genre> genres = await _context.Genres.ToListAsync();
 
-            ProductView productView = new ProductView
+            ProductView productView = new()
             {
                 Product = new(),
                 GenreListItems = genres.Select(genre => new SelectListItem
@@ -73,19 +75,11 @@ namespace RetroStoreWeb.Areas.Manager.Controllers {
                     var uploadPath = Path.Combine(wwwRootPath, @"assets\img\products");
                     var extension = Path.GetExtension(file.FileName);
 
-                    if (productView.Product.ImageUrl != null) {
-                        var oldImagePath = Path.Combine(wwwRootPath, productView.Product.ImageUrl.TrimStart('\\'));
-
-                        if (System.IO.File.Exists(oldImagePath)) {
-                            System.IO.File.Delete(oldImagePath);
-                        }
-                    }
-
                     using (var fileStream = new FileStream(Path.Combine(uploadPath, fileName + extension), FileMode.Create)) {
                         file.CopyTo(fileStream);
                     }
 
-                    productView.Product.ImageUrl = @"\assets\img\products\" + fileName + extension;
+                    productView.Product.ImageUrl = @$"\assets\img\products\{fileName}{extension}";
                 }
 
                 await _context.Products.AddAsync(productView.Product);
@@ -102,7 +96,7 @@ namespace RetroStoreWeb.Areas.Manager.Controllers {
 
             IEnumerable<Genre> genres = await _context.Genres.ToListAsync();
 
-            ProductView productView = new ProductView
+            ProductView productView = new()
             {
                 Product = new(),
                 GenreListItems = genres.Select(genre => new SelectListItem
@@ -170,7 +164,9 @@ namespace RetroStoreWeb.Areas.Manager.Controllers {
                         file.CopyTo(fileStream);
                     }
 
-                    productView.Product.ImageUrl = @$"\assets\img\products{fileName}{extension}";
+                    productView.Product.ImageUrl = @$"\assets\img\products\{fileName}{extension}";
+
+                    productToUpdate.ImageUrl = productView.Product.ImageUrl;
                 }
 
                 productToUpdate.Name = productView.Product.Name;
@@ -182,8 +178,6 @@ namespace RetroStoreWeb.Areas.Manager.Controllers {
                 productToUpdate.Developer = productView.Product.Developer;
                 productToUpdate.Publisher = productView.Product.Publisher;
                 productToUpdate.Platform = productView.Product.Platform;
-
-                Console.WriteLine(originalProduct.Equals(productToUpdate));
 
                 if (!originalProduct.Equals(productToUpdate)) {
                     await _context.SaveChangesAsync();
@@ -218,6 +212,16 @@ namespace RetroStoreWeb.Areas.Manager.Controllers {
 
             if (productToDelete == null) {
                 return Json(new { success = false, message = "Error while deleting product!" });
+            }
+
+            if (productToDelete.ImageUrl != null) {
+                string wwwRootPath = _webHostEnvironment.WebRootPath;
+
+                var imagePath = Path.Combine(wwwRootPath, productToDelete.ImageUrl.TrimStart('\\'));
+
+                if (System.IO.File.Exists(imagePath)) {
+                    System.IO.File.Delete(imagePath);
+                }
             }
 
             _context.Remove(productToDelete);

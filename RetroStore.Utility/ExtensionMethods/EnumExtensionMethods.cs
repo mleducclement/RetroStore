@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 namespace RetroStore.Utility.ExtensionMethods {
     public static class EnumExtensionMethods {
         public static string GetDescription(this Enum value) {
-
             Type type = value.GetType();
             string? name = Enum.GetName(type, value);
             if (name == null) {
@@ -19,8 +18,7 @@ namespace RetroStore.Utility.ExtensionMethods {
             if (field == null) {
                 return "No Field";
             }
-            DescriptionAttribute? attr = Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute)) as DescriptionAttribute;
-            return attr != null ? attr.Description : name;
+            return Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute)) is DescriptionAttribute attr ? attr.Description : name;
         }
     }
 }
