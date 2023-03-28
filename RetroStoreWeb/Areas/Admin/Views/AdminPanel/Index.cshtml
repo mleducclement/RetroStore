@@ -1,17 +1,16 @@
 ﻿@{
-    //TODO : Refine admin panel
     ViewData["Title"] = "Admin Panel";
 }
 
-<div>
-    <a asp-action="CreateRole">Create New Role</a>
-</div>
-
-<div>
-    <a asp-action="ListRoles">List Roles</a>
-</div>
-
-<div>
-    <a asp-action="ListUsers">List User</a>
+<div class="row">
+    <div class="col-md-3">
+        <nav>
+            <ul class="nav nav-pills flex-column bg-secondary bg-opacity-10 mt-4 rounded">
+                <li class="nav-item"><a class="nav-link" asp-action="CreateRole">Create New Role</a></li>
+                <li class="nav-item"><a class="nav-link" asp-action="ListRoles">List Roles</a></li>
+                <li class="nav-item"><a class="nav-link" asp-action="ListUsers">List User</a></li>
+            </ul>
+        </nav>
+    </div>
 </div>
 

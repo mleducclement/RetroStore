@@ -81,7 +81,7 @@ namespace RetroStore.Models.Models {
         }
 
         public override int GetHashCode() {
-            HashCode hash = new HashCode();
+            HashCode hash = new();
             hash.Add(Id);
             hash.Add(Name);
             hash.Add(Description);

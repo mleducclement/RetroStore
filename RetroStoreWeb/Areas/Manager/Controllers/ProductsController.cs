@@ -10,7 +10,7 @@ using RetroStore.Utility.ExtensionMethods;
 namespace RetroStoreWeb.Areas.Manager.Controllers {
 
     [Area("Manager")]
-    [Authorize(Roles = "Administrator, Manager")]
+    //[Authorize(Roles = "Administrator, Manager")]
     public class ProductsController : Controller {
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
@@ -48,26 +48,27 @@ namespace RetroStoreWeb.Areas.Manager.Controllers {
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductView productView, IFormFile? file) {
-            var duplicateProduct = _context.Products.FirstOrDefault(p => p.Name == productView.Product.Name && p.Id != productView.Product.Id);
-
-            if (duplicateProduct != null) {
-                ModelState.AddModelError("Duplicate Product", "A product with this name already exists");
-
-                return View(productView);
-            }
-
-            IEnumerable<Genre> genres = await _context.Genres.ToListAsync();
-            productView.GenreListItems = genres.Select(genre => new SelectListItem
-            {
-                Text = genre.Name,
-                Value = genre.Id.ToString()
-            });
 
             if (file == null) {
                 ModelState.AddModelError("FileURL", "Please upload a file");
             }
 
             if (ModelState.IsValid) {
+                var duplicateProduct = _context.Products.FirstOrDefault(p => p.Name == productView.Product.Name && p.Id != productView.Product.Id);
+
+                if (duplicateProduct != null) {
+                    ModelState.AddModelError("Duplicate Product", "A product with this name already exists");
+
+                    return View(productView);
+                }
+
+                IEnumerable<Genre> genres = await _context.Genres.ToListAsync();
+                productView.GenreListItems = genres.Select(genre => new SelectListItem
+                {
+                    Text = genre.Name,
+                    Value = genre.Id.ToString()
+                });
+
                 string wwwRootPath = _webHostEnvironment.WebRootPath;
 
                 if (file != null) {
@@ -138,30 +139,22 @@ namespace RetroStoreWeb.Areas.Manager.Controllers {
                 return NotFound();
             }
 
-            var productToUpdate = await _context.Products.FirstOrDefaultAsync(p => p.Id == productView.Product.Id);
-
-            if (productToUpdate == null) {
-                return NotFound();
-            }
+            var productToUpdate = originalProduct;
 
             if (ModelState.IsValid) {
-                string wwwRootPath = _webHostEnvironment.WebRootPath;
 
                 if (file != null) {
+                    string wwwRootPath = _webHostEnvironment.WebRootPath;
                     string fileName = Guid.NewGuid().ToString();
                     var uploadPath = Path.Combine(wwwRootPath, @"assets\img\products");
                     var extension = Path.GetExtension(file.FileName);
 
-                    if (productView.Product.ImageUrl != null) {
-                        var oldImagePath = Path.Combine(wwwRootPath, productView.Product.ImageUrl.TrimStart('\\'));
-
-                        if (System.IO.File.Exists(oldImagePath)) {
-                            System.IO.File.Delete(oldImagePath);
-                        }
-                    }
-
                     using (var fileStream = new FileStream(Path.Combine(uploadPath, fileName + extension), FileMode.Create)) {
                         file.CopyTo(fileStream);
+                    }
+
+                    if (productView.Product.ImageUrl != null) {
+                        DeleteOldImageIfExists(productView.Product.ImageUrl, wwwRootPath);
                     }
 
                     productView.Product.ImageUrl = @$"\assets\img\products\{fileName}{extension}";
@@ -178,6 +171,7 @@ namespace RetroStoreWeb.Areas.Manager.Controllers {
                 productToUpdate.Developer = productView.Product.Developer;
                 productToUpdate.Publisher = productView.Product.Publisher;
                 productToUpdate.Platform = productView.Product.Platform;
+
 
                 if (!originalProduct.Equals(productToUpdate)) {
                     await _context.SaveChangesAsync();
@@ -227,6 +221,27 @@ namespace RetroStoreWeb.Areas.Manager.Controllers {
             _context.Remove(productToDelete);
             await _context.SaveChangesAsync();
             return Json(new { success = true, message = "Product deleted successfully" });
+        }
+
+        #endregion
+
+        #region NoActionMethods
+
+        private static void DeleteOldImageIfExists(string oldImageUrl, string wwwRootPath) {
+            var oldImagePath = Path.Combine(wwwRootPath, oldImageUrl.TrimStart('\\'));
+
+            if (System.IO.File.Exists(oldImagePath)) {
+                System.IO.File.Delete(oldImagePath);
+            }
+        }
+
+        private static void SaveImageToAssets(IFormFile file, string wwwRootPath) {
+            string fileName = Guid.NewGuid().ToString();
+            var uploadPath = Path.Combine(wwwRootPath, @"assets\img\products");
+            var extension = Path.GetExtension(file.FileName);
+
+            using var fileStream = new FileStream(Path.Combine(uploadPath, fileName + extension), FileMode.Create);
+            file.CopyTo(fileStream);
         }
 
         #endregion
