@@ -23,10 +23,10 @@ namespace RetroStore.Models.Models {
         [MaxLength(500)]
         public string Description { get; set; } = null!;
 
+        [Required]
         [DisplayName("Genre")]
         public int GenreId { get; set; }
 
-        [Required]
         [ValidateNever]
         public Genre Genre { get; set; } = null!;
 
@@ -66,7 +66,6 @@ namespace RetroStore.Models.Models {
 
         public override bool Equals(object? obj) {
             return obj is Product product &&
-                   Id == product.Id &&
                    Name == product.Name &&
                    Description == product.Description &&
                    GenreId == product.GenreId &&
@@ -81,8 +80,7 @@ namespace RetroStore.Models.Models {
         }
 
         public override int GetHashCode() {
-            HashCode hash = new();
-            hash.Add(Id);
+            HashCode hash = new HashCode();
             hash.Add(Name);
             hash.Add(Description);
             hash.Add(GenreId);
@@ -90,11 +88,9 @@ namespace RetroStore.Models.Models {
             hash.Add(ListPrice);
             hash.Add(Price);
             hash.Add(ReleaseDate);
-            hash.Add(ReleaseDateWithoutTime);
             hash.Add(Developer);
             hash.Add(Publisher);
             hash.Add(Platform);
-            hash.Add(PlatformName);
             hash.Add(ImageUrl);
             return hash.ToHashCode();
         }

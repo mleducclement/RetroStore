@@ -52,22 +52,15 @@ namespace RetroStoreWeb.Areas.Manager.Controllers {
                 ModelState.AddModelError("FileURL", "Please upload a file");
             }
 
+            var duplicateProduct = _context.Products.FirstOrDefault(p => p.Name == productView.Product.Name && p.Id != productView.Product.Id);
+
+            if (duplicateProduct != null) {
+                ModelState.AddModelError("Duplicate Product", "A product with this name already exists");
+
+                return View(productView);
+            }
+
             if (ModelState.IsValid) {
-                var duplicateProduct = _context.Products.FirstOrDefault(p => p.Name == productView.Product.Name && p.Id != productView.Product.Id);
-
-                if (duplicateProduct != null) {
-                    ModelState.AddModelError("Duplicate Product", "A product with this name already exists");
-
-                    return View(productView);
-                }
-
-                IEnumerable<Genre> genres = await _context.Genres.ToListAsync();
-                productView.GenreListItems = genres.Select(genre => new SelectListItem
-                {
-                    Text = genre.Name,
-                    Value = genre.Id.ToString()
-                });
-
                 string wwwRootPath = _webHostEnvironment.WebRootPath;
 
                 if (file != null) {
@@ -87,6 +80,13 @@ namespace RetroStoreWeb.Areas.Manager.Controllers {
                 TempData["success"] = "The product was updated successfully";
                 return RedirectToAction("Index");
             }
+
+            IEnumerable<Genre> genres = await _context.Genres.ToListAsync();
+            productView.GenreListItems = genres.Select(genre => new SelectListItem
+            {
+                Text = genre.Name,
+                Value = genre.Id.ToString()
+            });
 
             return View(productView);
         }
@@ -138,9 +138,14 @@ namespace RetroStoreWeb.Areas.Manager.Controllers {
                 return NotFound();
             }
 
-            var productToUpdate = originalProduct;
+            var productToUpdate = _context.Products.FirstOrDefault(p => p.Id == productView.Product.Id);
+
+            if (productToUpdate == null) {
+                return NotFound();
+            }
 
             if (ModelState.IsValid) {
+
 
                 if (file != null) {
                     string wwwRootPath = _webHostEnvironment.WebRootPath;
@@ -179,6 +184,13 @@ namespace RetroStoreWeb.Areas.Manager.Controllers {
 
                 return RedirectToAction("Index");
             }
+
+            IEnumerable<Genre> genres = await _context.Genres.ToListAsync();
+            productView.GenreListItems = genres.Select(genre => new SelectListItem
+            {
+                Text = genre.Name,
+                Value = genre.Id.ToString()
+            });
 
             return View(productView);
         }
