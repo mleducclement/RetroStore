@@ -44,7 +44,6 @@ namespace RetroStoreWeb.Areas.Manager.Controllers {
             if (ModelState.IsValid) {
                 _context.Add(genre);
                 await _context.SaveChangesAsync();
-                //TODO : Add check to make sure the genre has been modified
                 TempData["success"] = "The genre was added successfully";
                 return RedirectToAction("Index");
             }

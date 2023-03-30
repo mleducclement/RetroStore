@@ -26,7 +26,6 @@ namespace RetroStoreWeb.Areas.Manager.Controllers {
             return View(products);
         }
 
-        //TODO : Fix bug where we can add product without image because of JS validation
         // GET
         public async Task<IActionResult> Create() {
             IEnumerable<Genre> genres = await _context.Genres.ToListAsync();

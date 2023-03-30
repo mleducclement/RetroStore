@@ -36,5 +36,5 @@ else {
         </tbody>
     </table>
 
-    <h5>Total is : $@ViewBag.TotalPrice</h5>
+    <h5>Total is : @String.Format("{0:C2}", ViewBag.TotalPrice)</h5>
 }
