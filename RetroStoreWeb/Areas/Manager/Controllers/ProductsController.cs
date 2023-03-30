@@ -61,6 +61,7 @@ namespace RetroStoreWeb.Areas.Manager.Controllers {
             }
 
             if (ModelState.IsValid) {
+                // Get the rootpath from the environment
                 string wwwRootPath = _webHostEnvironment.WebRootPath;
 
                 if (file != null) {
@@ -244,15 +245,6 @@ namespace RetroStoreWeb.Areas.Manager.Controllers {
             if (System.IO.File.Exists(oldImagePath)) {
                 System.IO.File.Delete(oldImagePath);
             }
-        }
-
-        private static void SaveImageToAssets(IFormFile file, string wwwRootPath) {
-            string fileName = Guid.NewGuid().ToString();
-            var uploadPath = Path.Combine(wwwRootPath, @"assets\img\products");
-            var extension = Path.GetExtension(file.FileName);
-
-            using var fileStream = new FileStream(Path.Combine(uploadPath, fileName + extension), FileMode.Create);
-            file.CopyTo(fileStream);
         }
 
         #endregion

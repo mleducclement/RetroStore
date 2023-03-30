@@ -17,7 +17,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options
     .UseSqlServer(builder.Configuration.GetConnectionString("Default"))
     .UseLoggerFactory(LoggerFactory.Create(builder => builder.AddSimpleConsole()))
     .EnableSensitiveDataLogging()
-
 );
 
 builder.Services.AddDefaultIdentity<IdentityUser>()

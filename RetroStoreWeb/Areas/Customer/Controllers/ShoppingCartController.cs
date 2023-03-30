@@ -17,6 +17,7 @@ namespace RetroStoreWeb.Areas.Customer.Controllers {
 
             List<CartItemView> cart = HttpContext.Session.Get<List<CartItemView>>("cart");
 
+            // ViewBag is tempdata storage for ONE request
             ViewBag.TotalPrice = cart.Sum(p => p.Product.Price * p.Count);
 
             return View(cart);

@@ -4,6 +4,7 @@ $(document).ready(function () {
     loadDataTable();
 })
 
+// load data table using the api call to /Manager/Products/GetAll
 function loadDataTable() {
     dataTable = new DataTable("#tblData", {
         responsive: true,
@@ -31,6 +32,7 @@ function loadDataTable() {
     })
 }
 
+// swal is sweetalert2 module and will display an error message as a modal if there is no image selected
 const Delete = (url) => {
     Swal.fire({
         title: 'Are you sure?',
